@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+
 // Algorithms
 import MergeSort from './algorithms/MS';
 
@@ -16,17 +17,26 @@ import RotateLeft from '@material-ui/icons/RotateLeft';
 
 //CSS
 import './App.css';
+
+
 import Node from './components/Node';
+import MergeDisplay from './components/MergeDisplay';
 
 
 
 class App extends Component {
 	state = {
 		array: [],
+		currentStep: 2,
 		treeSteps: [],
-		mergeSteps:[],
 		currentTree:{},
-		currentStep: 1,
+
+		mergeStepsState:[],
+		mergeColorStepsState:[],
+		currentMergeStep:null,
+		currentMergeColorStep:null,
+
+
 		count: 5,
 		delay: 500,
 		algorithm: 'Merge Sort',
@@ -46,11 +56,16 @@ class App extends Component {
 		console.log(this.state.colorSteps);
 		let array = this.state.array.slice();
 
-		const steps = this.ALGORITHMS[this.state.algorithm](array);
-		
+		const {steps,mergeSteps,mergeColorSteps} = this.ALGORITHMS[this.state.algorithm](array);
+		console.log(mergeSteps,mergeColorSteps);
+
 		this.setState({
 			treeSteps: steps,
-			currentTree:steps[1]
+			currentTree:steps[1],
+			mergeStepsState: mergeSteps,
+			mergeColorStepsState: mergeColorSteps,
+			currentMergeStep:mergeSteps[1],
+			currentMergeColorStep:mergeColorSteps[1]
 		});
 	};
 
@@ -109,6 +124,9 @@ class App extends Component {
 		this.setState({
 			currentStep: currentStep,
 			currentTree: this.state.treeSteps[currentStep],
+			currentMergeColorStep: this.state.mergeColorStepsState[currentStep],
+			currentMergeStep: this.state.mergeStepsState[currentStep]
+
 		});
 	};
 
@@ -119,6 +137,8 @@ class App extends Component {
 		this.setState({
 			currentStep: currentStep,
 			currentTree: this.state.treeSteps[currentStep],
+			currentMergeColorStep: this.state.mergeColorStepsState[currentStep],
+			currentMergeStep: this.state.mergeStepsState[currentStep]
 		});
 	};
 
@@ -172,7 +192,11 @@ class App extends Component {
 						<Node tree={this.state.currentTree}/>
 					</div>
 					<div className="mergeSection">
-						
+						{this.state.currentMergeStep && 
+							<MergeDisplay 
+								currentStep={this.state.currentMergeStep}
+								currentColorStep={this.state.currentMergeColorStep}
+						/>}
 					</div>
 				</div>
 				
