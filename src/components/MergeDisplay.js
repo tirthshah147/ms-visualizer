@@ -5,7 +5,7 @@ import MergeArrRow from './MergeArrRow'
 export default function MergeDisplay({currentStep, currentColorStep}) {
 
   return (
-    <div className="tree">
+    <div className="tree mergeTree">
         <ul>
             <MergeArrRow arr={currentStep[0]} colorCodes={currentColorStep[0]}>
                 <MergeArrRow arr={currentStep[1]} colorCodes={currentColorStep[1]}/>

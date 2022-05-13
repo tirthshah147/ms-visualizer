@@ -21,6 +21,10 @@ import './App.css';
 
 import Node from './components/Node';
 import MergeDisplay from './components/MergeDisplay';
+import MSCode from './codes/MSCode';
+import ParamBox from './components/ParamBox';
+
+
 
 
 
@@ -36,6 +40,14 @@ class App extends Component {
 		currentMergeStep:null,
 		currentMergeColorStep:null,
 
+		mergeCodeColorKey:null,
+		mergeCodeColorSteps:[],
+
+		leftIndexes:[],
+		rightIndexes:[],
+
+		leftIndex:null,
+		rightIndex:null,
 
 		count: 5,
 		delay: 500,
@@ -56,8 +68,10 @@ class App extends Component {
 		console.log(this.state.colorSteps);
 		let array = this.state.array.slice();
 
-		const {steps,mergeSteps,mergeColorSteps} = this.ALGORITHMS[this.state.algorithm](array);
-		console.log(mergeSteps,mergeColorSteps);
+		const {steps,mergeSteps,mergeColorSteps,mergeCodeColorSteps, rightIndexes, leftIndexes} = this.ALGORITHMS[this.state.algorithm](array);
+		console.log(leftIndexes,rightIndexes);
+
+		console.log(mergeSteps);
 
 		this.setState({
 			treeSteps: steps,
@@ -65,7 +79,13 @@ class App extends Component {
 			mergeStepsState: mergeSteps,
 			mergeColorStepsState: mergeColorSteps,
 			currentMergeStep:mergeSteps[1],
-			currentMergeColorStep:mergeColorSteps[1]
+			currentMergeColorStep:mergeColorSteps[1],
+			mergeCodeColorSteps:mergeCodeColorSteps,
+			mergeCodeColorKey:mergeCodeColorSteps[1],
+			rightIndexes: rightIndexes,
+			rightIndex: rightIndexes[1],
+			leftIndexes: leftIndexes,
+			leftIndex: leftIndexes[1]
 		});
 	};
 
@@ -125,7 +145,10 @@ class App extends Component {
 			currentStep: currentStep,
 			currentTree: this.state.treeSteps[currentStep],
 			currentMergeColorStep: this.state.mergeColorStepsState[currentStep],
-			currentMergeStep: this.state.mergeStepsState[currentStep]
+			currentMergeStep: this.state.mergeStepsState[currentStep],
+			mergeCodeColorKey: this.state.mergeCodeColorSteps[currentStep],
+			leftIndex: this.state.leftIndexes[currentStep],
+			rightIndex: this.state.rightIndexes[currentStep],
 
 		});
 	};
@@ -138,7 +161,10 @@ class App extends Component {
 			currentStep: currentStep,
 			currentTree: this.state.treeSteps[currentStep],
 			currentMergeColorStep: this.state.mergeColorStepsState[currentStep],
-			currentMergeStep: this.state.mergeStepsState[currentStep]
+			currentMergeStep: this.state.mergeStepsState[currentStep],
+			mergeCodeColorKey: this.state.mergeCodeColorSteps[currentStep],
+			leftIndex: this.state.leftIndexes[currentStep],
+			rightIndex: this.state.rightIndexes[currentStep],
 		});
 	};
 
@@ -186,17 +212,34 @@ class App extends Component {
 		}
 
 		return (
-			<div className='app'>
+			<div className=''>
 				<div className="row">
 					<div className="tree">
 						<Node tree={this.state.currentTree}/>
 					</div>
 					<div className="mergeSection">
-						{this.state.currentMergeStep && 
-							<MergeDisplay 
-								currentStep={this.state.currentMergeStep}
-								currentColorStep={this.state.currentMergeColorStep}
-						/>}
+						<div className="mergeVisuals">
+							{this.state.currentMergeStep && 
+								(<>
+
+									<MergeDisplay 
+									currentStep={this.state.currentMergeStep}
+									currentColorStep={this.state.currentMergeColorStep}/>	
+
+									<div className="paramStats">
+										<ParamBox title="leftIndex" value={this.state.leftIndex}/>
+										<ParamBox title="rightIndex" value={this.state.rightIndex}/>
+									</div>
+								
+								</>)
+							
+							}
+
+						</div>
+						<div className="mergeCode">
+							{this.state.mergeCodeColorKey && <MSCode mergeCodeColorKey={this.state.mergeCodeColorKey}/>}
+							
+						</div>
 					</div>
 				</div>
 				

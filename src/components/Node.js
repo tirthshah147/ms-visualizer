@@ -18,9 +18,7 @@ export default function Node({tree}) {
                                         )
                                     })}
                                 </div>
-                                
-                                {/* <span>{child.value}</span> */}
-                                </a>
+                            </a>
                             <Node tree={child}/>
                         </li>
                     )
