@@ -7,6 +7,8 @@ const steps = [
 
 ];
 
+const msCodeColorSteps = [[], []];
+
 
 const stack = [steps[0]];
 
@@ -32,18 +34,113 @@ const ms = (array) => {
     stack.push(steps[1].childs[0]);
     
     mergeSort(array);
-    return {steps,mergeSteps,mergeColorSteps, mergeCodeColorSteps, leftIndexes, rightIndexes};
+    return {steps,mergeSteps,mergeColorSteps, mergeCodeColorSteps, leftIndexes, rightIndexes, msCodeColorSteps};
 };
 
 
 
 const mergeSort = (array) => {
 
+    // const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+    // if (!lastMSCodeColorStep.length) {
+    //     const newMSCodeColorStep = [0];
+    //     msCodeColorSteps.push(newMSCodeColorStep);
+    // }else{
+    //     const newMSCodeColorStep = [...lastMSCodeColorStep];
+    //     newMSCodeColorStep[newMSCodeColorStep.length - 1] = 7;
+    //     newMSCodeColorStep.push(0);
+    //     msCodeColorSteps.push(newMSCodeColorStep);
+    // }
+
+    
+
     if (array.length <= 1) {
+
+
         makeHowActive(true);
+        // createUpdatePosMSCodeColorStep(1);
+
+        createUpdatePosMSCodeColorStep(1)
+        createFalseTreeStep()
+        createFalseMergeStep();
+
         makeSorted();
+        createUpdatePosMSCodeColorStep(2);
 
         stack.pop();
+        
+        const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+        const newMSCodeColorStep = [...lastMSCodeColorStep];
+        newMSCodeColorStep.pop();
+        newMSCodeColorStep[newMSCodeColorStep.length - 1] = 0;
+        msCodeColorSteps.push(newMSCodeColorStep);
+        createFalseTreeStep()
+        createFalseMergeStep();
+
+        return array
+    }
+
+
+    const midIndex = Math.floor(array.length/2);
+    const leftArr = array.slice(0,midIndex);
+    const rightArr = array.slice(midIndex);
+
+    let leftChild = {
+        value: leftArr.slice(),
+        childs:[]
+    }
+
+    let rightChild = {
+        value: rightArr.slice(),
+        childs:[]
+    }
+
+    makeHowActive(true);
+
+    createUpdatePosMSCodeColorStep(1)
+    createFalseTreeStep()
+    createFalseMergeStep();
+    
+    
+
+    createStep(leftChild, rightChild);
+
+    return merge(mergeSort(leftArr),mergeSortRight(rightArr));
+    
+}
+
+const mergeSortRight = (array) => {
+
+    // const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+    // if (!lastMSCodeColorStep.length) {
+    //     const newMSCodeColorStep = [0];
+    //     msCodeColorSteps.push(newMSCodeColorStep);
+    // }else{
+    //     const newMSCodeColorStep = [...lastMSCodeColorStep];
+    //     newMSCodeColorStep[newMSCodeColorStep.length - 1] = 8;
+    //     msCodeColorSteps.push(newMSCodeColorStep);
+    // }
+
+    if (array.length <= 1) {
+        makeHowActive(true,'right');
+
+        createUpdatePosMSCodeColorStep(1)
+        createFalseTreeStep()
+        createFalseMergeStep();
+
+        makeSorted();
+        createUpdatePosMSCodeColorStep(2);
+
+        stack.pop();
+
+        const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+        const newMSCodeColorStep = [...lastMSCodeColorStep];
+        newMSCodeColorStep.pop();
+        newMSCodeColorStep[newMSCodeColorStep.length - 1] = 0;
+        msCodeColorSteps.push(newMSCodeColorStep);
+        createFalseTreeStep()
+        createFalseMergeStep();
+
         return array
     }
 
@@ -61,14 +158,15 @@ const mergeSort = (array) => {
         childs:[]
     }
 
-    makeHowActive(true);
-    
+    makeHowActive(true,'right');
 
-    // makeHowActive(false);
+    createUpdatePosMSCodeColorStep(1)
+    createFalseTreeStep()
+    createFalseMergeStep();
 
     createStep(leftChild, rightChild);
 
-    return merge(mergeSort(leftArr),mergeSort(rightArr));
+    return merge(mergeSort(leftArr),mergeSortRight(rightArr));
     
 }
 
@@ -98,6 +196,7 @@ const merge = (leftArr, rightArr) => {
     mergeSteps.push([[...outputArr], [...leftArr], [...rightArr]]);
     mergeCodeColorSteps.push([...mergeCodeColorStepSample]);
     createFalseTreeStep();
+    createUpdatePosMSCodeColorStep(6);
 
     //Add step to make leftindeex,rightIndex = 0;
     mergeCodeColorStepSample[0] = 1;
@@ -107,6 +206,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
 
     mergeCodeColorStepSample[0] = 0;
     //Add step to initialize outputArr & highlight that code;
@@ -117,6 +217,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
 
     mergeCodeColorStepSample[1] = 0;
 
@@ -127,6 +228,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
 
     mergeCodeColorStepSample[2] = 0;
 
@@ -146,6 +248,7 @@ const merge = (leftArr, rightArr) => {
        leftIndexes.push(leftIndex);
        rightIndexes.push(rightIndex);
        createFalseTreeStep();
+       createFalseMSCodeColorStep();
 
 
        if (leftElement < rightElement) {
@@ -158,6 +261,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
 
            outputArr[count] = leftElement;
 
@@ -171,6 +275,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
            
            mergeCodeColorStepSample[4] = 0;
            
@@ -184,6 +289,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
 
            mergeCodeColorStepSample[5] = 0;
 
@@ -198,6 +304,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
 
            outputArr[count] = rightElement;
 
@@ -211,6 +318,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
 
            mergeCodeColorStepSample[6] = 0;
 
@@ -223,6 +331,7 @@ const merge = (leftArr, rightArr) => {
            leftIndexes.push(leftIndex);
            rightIndexes.push(rightIndex);
            createFalseTreeStep();
+           createFalseMSCodeColorStep();
 
            mergeCodeColorStepSample[7] = 0;
 
@@ -238,6 +347,7 @@ const merge = (leftArr, rightArr) => {
        leftIndexes.push(leftIndex);
        rightIndexes.push(rightIndex);
        createFalseTreeStep();
+       createFalseMSCodeColorStep();
 
        mergeCodeColorStepSample[2] = 0;
 
@@ -252,6 +362,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
     
     
 
@@ -264,6 +375,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         outputArr[count] = leftArr[j] ;
 
@@ -277,6 +389,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         mergeCodeColorStepSample[9] = 0;
 
@@ -287,6 +400,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         count++
     }
@@ -300,6 +414,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
 
     
 
@@ -311,6 +426,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         outputArr[count] = rightArr[j];
 
@@ -324,6 +440,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         mergeCodeColorStepSample[11] = 0;
 
@@ -334,6 +451,7 @@ const merge = (leftArr, rightArr) => {
         leftIndexes.push(leftIndex);
         rightIndexes.push(rightIndex);
         createFalseTreeStep();
+        createFalseMSCodeColorStep();
 
         count++ 
     }
@@ -347,6 +465,7 @@ const merge = (leftArr, rightArr) => {
     leftIndexes.push(leftIndex);
     rightIndexes.push(rightIndex);
     createFalseTreeStep();
+    createFalseMSCodeColorStep();
 
     
 
@@ -358,12 +477,23 @@ const merge = (leftArr, rightArr) => {
 }
 
 
-function makeHowActive(bool){
+function makeHowActive(bool,direction="left"){
     let newStep = JSON.parse(JSON.stringify(steps[steps.length - 1]));
     steps.splice(steps.length - 1, 0, newStep);
     stack[stack.length - 1].isActive = bool;
 
     createFalseMergeStep();
+
+    const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+    if (!lastMSCodeColorStep.length) {
+        const newMSCodeColorStep = [0];
+        msCodeColorSteps.push(newMSCodeColorStep);
+    }else{
+        const newMSCodeColorStep = [...lastMSCodeColorStep];
+        newMSCodeColorStep[newMSCodeColorStep.length - 1] = direction === "left" ? 7 : 8;
+        newMSCodeColorStep.push(0);
+        msCodeColorSteps.push(newMSCodeColorStep);
+    }
 }
 
 function makeSorted(){
@@ -381,15 +511,16 @@ function createStep(leftChild, rightChild){
     steps.splice(steps.length - 1, 0, newStep);
     stack[stack.length - 1].isActive = false;
     stack[stack.length - 1].childs.push(leftChild);
-
     createFalseMergeStep();
+    createUpdatePosMSCodeColorStep(4);
 
+    
 
     let newStep2 = JSON.parse(JSON.stringify(steps[steps.length - 1]));
     steps.splice(steps.length - 1, 0, newStep2);
     stack[stack.length - 1].childs.push(rightChild);
-
     createFalseMergeStep();
+    createUpdatePosMSCodeColorStep(5);
 
     stack.push(rightChild);
     stack.push(leftChild);
@@ -401,8 +532,15 @@ function createBackwardStep(sortedArr){
     stack[stack.length - 1].value = sortedArr;
     
     createFalseMergeStep();
+    createFalseMSCodeColorStep();
 
     makeSorted();
+
+    const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+    const newMSCodeColorStep = [...lastMSCodeColorStep];
+    newMSCodeColorStep.pop();
+    newMSCodeColorStep[newMSCodeColorStep.length - 1] = 0;
+    msCodeColorSteps.push(newMSCodeColorStep);
 
 }
 
@@ -418,6 +556,18 @@ function createFalseMergeStep(){
     mergeCodeColorSteps.push(null);
     leftIndexes.push(null);
     rightIndexes.push(null);
+}
+
+function createFalseMSCodeColorStep(){
+    let newStep = JSON.parse(JSON.stringify(msCodeColorSteps[msCodeColorSteps.length - 1]));
+    msCodeColorSteps.push(newStep);
+}
+
+function createUpdatePosMSCodeColorStep(pos){
+    const lastMSCodeColorStep = msCodeColorSteps[msCodeColorSteps.length - 1];
+    const newMSCodeColorStep = [...lastMSCodeColorStep];
+    newMSCodeColorStep[newMSCodeColorStep.length - 1] = pos;
+    msCodeColorSteps.push(newMSCodeColorStep);
 }
 
 

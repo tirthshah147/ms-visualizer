@@ -4,16 +4,23 @@
 	box-sizing: border-box;
 }
 
-.tree {
+.algoBlock{
 	width: 35%;
+	
+}
+
+.tree {
+	width: 100%;
 	height: auto;
 	text-align: center;
+	min-height: 50vh;
 }
 
 .mergeTree {
 	width: 100%;
 	height: auto;
 	text-align: center;
+	min-height: 0vh;
 }
 
 .tree ul {
@@ -143,8 +150,11 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: 50px;
-	margin-bottom: 50px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
 }
 
 .row{
@@ -226,6 +236,13 @@
 	font-size: 11px;
 	text-align: center;
 	margin-top: 5px;
+}
+
+.codeStack{
+	height: 50vh;
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column-reverse;
 }
 
 

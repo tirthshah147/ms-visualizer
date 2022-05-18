@@ -21,8 +21,9 @@ import './App.css';
 
 import Node from './components/Node';
 import MergeDisplay from './components/MergeDisplay';
-import MSCode from './codes/MSCode';
+import MCode from './codes/MCode';
 import ParamBox from './components/ParamBox';
+import MSCode from './codes/MSCode';
 
 
 
@@ -31,9 +32,12 @@ import ParamBox from './components/ParamBox';
 class App extends Component {
 	state = {
 		array: [],
-		currentStep: 2,
+		currentStep: 1,
 		treeSteps: [],
 		currentTree:{},
+
+		msCodeColorSteps: [],
+		currentmsCodeColorStep:[],
 
 		mergeStepsState:[],
 		mergeColorStepsState:[],
@@ -68,24 +72,26 @@ class App extends Component {
 		console.log(this.state.colorSteps);
 		let array = this.state.array.slice();
 
-		const {steps,mergeSteps,mergeColorSteps,mergeCodeColorSteps, rightIndexes, leftIndexes} = this.ALGORITHMS[this.state.algorithm](array);
+		const {steps,mergeSteps,mergeColorSteps,mergeCodeColorSteps, rightIndexes, leftIndexes, msCodeColorSteps} = this.ALGORITHMS[this.state.algorithm](array);
 		console.log(leftIndexes,rightIndexes);
 
-		console.log(mergeSteps);
+		console.log(msCodeColorSteps);
 
 		this.setState({
 			treeSteps: steps,
-			currentTree:steps[1],
+			currentTree:steps[this.state.currentStep],
 			mergeStepsState: mergeSteps,
 			mergeColorStepsState: mergeColorSteps,
-			currentMergeStep:mergeSteps[1],
-			currentMergeColorStep:mergeColorSteps[1],
+			currentMergeStep:mergeSteps[this.state.currentStep],
+			currentMergeColorStep:mergeColorSteps[this.state.currentStep],
 			mergeCodeColorSteps:mergeCodeColorSteps,
-			mergeCodeColorKey:mergeCodeColorSteps[1],
+			mergeCodeColorKey:mergeCodeColorSteps[this.state.currentStep],
 			rightIndexes: rightIndexes,
-			rightIndex: rightIndexes[1],
+			rightIndex: rightIndexes[this.state.currentStep],
 			leftIndexes: leftIndexes,
-			leftIndex: leftIndexes[1]
+			leftIndex: leftIndexes[this.state.currentStep],
+			msCodeColorSteps: msCodeColorSteps,
+			currentmsCodeColorStep: msCodeColorSteps[this.state.currentStep]
 		});
 	};
 
@@ -149,6 +155,7 @@ class App extends Component {
 			mergeCodeColorKey: this.state.mergeCodeColorSteps[currentStep],
 			leftIndex: this.state.leftIndexes[currentStep],
 			rightIndex: this.state.rightIndexes[currentStep],
+			currentmsCodeColorStep: this.state.msCodeColorSteps[currentStep]
 
 		});
 	};
@@ -165,7 +172,14 @@ class App extends Component {
 			mergeCodeColorKey: this.state.mergeCodeColorSteps[currentStep],
 			leftIndex: this.state.leftIndexes[currentStep],
 			rightIndex: this.state.rightIndexes[currentStep],
+			currentmsCodeColorStep: this.state.msCodeColorSteps[currentStep]
 		});
+
+		var stackBody = document.querySelector('#stack');
+		// console.log(stackBody.scrollTop);
+		// console.log(stackBody.scrollHeight);
+		stackBody.scrollTop = - stackBody.scrollHeight;
+		// console.log(stackBody);
 	};
 
 	start = () => {
@@ -214,9 +228,17 @@ class App extends Component {
 		return (
 			<div className=''>
 				<div className="row">
-					<div className="tree">
-						<Node tree={this.state.currentTree}/>
+					<div className="algoBlock">
+						<div className="tree">
+							<Node tree={this.state.currentTree}/>
+						</div>
+						<div className="codeStack" id="stack">
+							{this.state.currentmsCodeColorStep && this.state.currentmsCodeColorStep.map((pos,index) => {
+								return <MSCode pos={pos} state={index === (this.state.currentmsCodeColorStep.length - 1) ? "active" : null} index={index}/>
+							})}
+						</div>
 					</div>
+					
 					<div className="mergeSection">
 						<div className="mergeVisuals">
 							{this.state.currentMergeStep && 
@@ -237,7 +259,7 @@ class App extends Component {
 
 						</div>
 						<div className="mergeCode">
-							{this.state.mergeCodeColorKey && <MSCode mergeCodeColorKey={this.state.mergeCodeColorKey}/>}
+							{this.state.mergeCodeColorKey && <MCode mergeCodeColorKey={this.state.mergeCodeColorKey}/>}
 							
 						</div>
 					</div>
@@ -256,11 +278,11 @@ class App extends Component {
 				</div>
 
 			</div>
-		);
-
-			
+		);	
 			
 	}
 }
 
 export default App;
+
+
